@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Design Readiness Assessment Framework</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f8f9fa;
+            color: #333333;
+            -webkit-font-smoothing: antialiased;
+            padding: 48px 150px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            margin-bottom: 48px;
+        }
+
+        .header h1 {
+            font-family: 'Roboto', sans-serif;
+            font-size: 36px;
+            font-weight: 400;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            color: #666666;
+            font-size: 14px;
+            font-weight: 400;
+            margin-bottom: 32px;
+        }
+
+        .input-section {
+            margin-bottom: 24px;
+        }
+
+        .input-grid {
+            margin-bottom: 32px;
+        }
+
+        .input-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #333333;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #1a1a1a;
+        }
+
+        .input-field::placeholder {
+            color: #999999;
+        }
+
+        select.input-field {
+            cursor: pointer;
+            background: white;
+        }
+
+        .intro-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #444444;
+            max-width: 900px;
+            display: none;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 48px;
+            align-items: start;
+        }
+
+        /* Accordion Styles */
+        .accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .accordion-item {
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            margin-bottom: 48px;
+        }
+
+        .accordion-item::before {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: #1a1a1a;
+            margin-bottom: 24px;
+        }
+
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            user-select: none;
+            background: transparent;
+            gap: 24px;
+        }
+
+        .accordion-title-section {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .accordion-number {
+            font-family: 'Roboto', sans-serif;
+            font-size: 32px;
+            font-weight: 400;
+            color: #1a1a1a;
+            line-height: 1;
+        }
+
+        .accordion-title {
+            font-family: 'Roboto', sans-serif;
+            font-size: 32px;
+            font-weight: 400;
+            color: #1a1a1a;
+            line-height: 1;
+            letter-spacing: 0.5px;
+        }
+
+        .accordion-description-preview {
+            display: none;
+        }
+
+        .accordion-header-right {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .accordion-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.unanswered {
+            background: #f5f5f5;
+            color: #999999;
+        }
+
+        .status-badge.answered {
+            background: #e8f5e9;
+            color: #4caf50;
+        }
+
+        .accordion-icon {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999999;
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-content {
+            max-height: 800px;
+        }
+
+        .accordion-body {
+            padding: 32px 0 0 80px;
+            background: transparent;
+            border-radius: 0;
+        }
+
+        .question-description {
+            font-size: 16px;
+            color: #444444;
+            margin-bottom: 32px;
+            line-height: 1.8;
+        }
+
+        .question-text {
+            font-size: 16px;
+            color: #333333;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            gap: 12px;
+            background: transparent;
+        }
+
+        .option:hover {
+            background: #e8e8e8;
+        }
+
+        .option.selected {
+            background: #d4d4d4;
+        }
+
+        .option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            cursor: pointer;
+            accent-color: #666666;
+            flex-shrink: 0;
+        }
+
+        .option-label {
+            flex: 1;
+            font-size: 15px;
+            color: #333333;
+            cursor: pointer;
+            line-height: 1.5;
+        }
+
+        /* Progress Panel */
+        .progress-panel {
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            position: sticky;
+            top: 48px;
+        }
+
+        .progress-header {
+            margin-bottom: 0;
+            display: none;
+        }
+
+        .progress-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #1a1a1a;
+        }
+
+        .progress-subtitle {
+            font-size: 13px;
+            color: #666666;
+            font-weight: 400;
+        }
+
+        /* Circular Progress */
+        .circular-progress {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+
+        .progress-ring {
+            position: relative;
+            width: 140px;
+            height: 140px;
+        }
+
+        .progress-ring svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .progress-ring-circle {
+            fill: none;
+            stroke: #f0f0f0;
+            stroke-width: 10;
+        }
+
+        .progress-ring-circle.progress {
+            stroke: #1a1a1a;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.3s ease, stroke 0.3s ease;
+        }
+
+        .progress-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .progress-percentage {
+            font-size: 32px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .progress-label {
+            font-size: 12px;
+            color: #999999;
+            margin-top: 4px;
+            font-weight: 400;
+        }
+
+        /* Readiness Bar */
+        .readiness-section {
+            display: none;
+        }
+
+        .readiness-title {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .readiness-bar-wrapper {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .readiness-bar {
+            height: 32px;
+            background: linear-gradient(90deg,
+                #f44336 0%,
+                #ff9800 25%,
+                #ffeb3b 50%,
+                #4caf50 75%,
+                #2196f3 100%);
+            border-radius: 4px;
+            position: relative;
+            overflow: visible;
+        }
+
+        .readiness-indicator {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 3px;
+            height: 40px;
+            background: #1a1a1a;
+            border-radius: 2px;
+            transition: left 0.3s ease;
+            left: 0%;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .readiness-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #999999;
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 0 24px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #333333;
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #333333;
+        }
+
+        .btn-secondary:active {
+            transform: scale(0.98);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 28px 32px 16px 32px;
+            border-bottom: 1px solid #1a1a1a;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .modal-title {
+            font-family: 'Roboto', sans-serif;
+            font-size: 28px;
+            font-weight: 400;
+            color: #1a1a1a;
+            flex: 1;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .modal-subtitle {
+            font-size: 13px;
+            color: #999999;
+            font-weight: 400;
+            margin: 0;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #f5f5f5;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666666;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .modal-close:hover {
+            background: #e0e0e0;
+            color: #333333;
+        }
+
+        .modal-body {
+            padding: 32px;
+        }
+
+        .result-score {
+            text-align: center;
+            margin-bottom: 32px;
+            padding: 32px;
+            background: #ffffff;
+            border-radius: 6px;
+        }
+
+        .result-score-value {
+            font-family: 'Roboto', sans-serif;
+            font-size: 64px;
+            font-weight: 400;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .result-score-label {
+            font-size: 14px;
+            color: #666666;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #333333;
+        }
+
+        .result-completion {
+            font-size: 14px;
+            color: #666666;
+            text-align: center;
+        }
+
+        .result-score {
+            text-align: center;
+        }
+
+        .result-readiness-bar {
+            padding: 0 32px;
+        }
+
+        .result-readiness-bar-inner {
+            height: 32px;
+            background: linear-gradient(90deg, 
+                #f44336 0%, 
+                #ff9800 25%, 
+                #ffeb3b 50%, 
+                #4caf50 75%, 
+                #2196f3 100%);
+            border-radius: 4px;
+            position: relative;
+            overflow: visible;
+        }
+
+        .result-readiness-indicator {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 3px;
+            height: 40px;
+            background: #1a1a1a;
+            border-radius: 2px;
+            transition: left 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .analysis-items {
+            margin-top: 32px;
+        }
+
+        .analysis-item {
+            padding: 16px 0;
+            border-bottom: 1px solid #e0e0e0;
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .analysis-item:last-child {
+            border-bottom: none;
+        }
+
+        .analysis-label {
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: #1a1a1a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .analysis-value {
+            font-size: 14px;
+            color: #666666;
+            line-height: 1.6;
+        }
+
+        /* Risk Warning */
+        .risk-warning {
+            margin-top: 24px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-left: 4px solid #8b0000;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .risk-warning-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #8b0000;
+            flex: 1;
+        }
+
+        .copy-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            background: transparent;
+            border: 1px solid #8b0000;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .copy-button:hover {
+            background: #8b0000;
+        }
+
+        .copy-button:hover .copy-icon {
+            stroke: white;
+        }
+
+        .copy-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #8b0000;
+            transition: stroke 0.2s ease;
+        }
+
+        @media (max-width: 1024px) {
+            body {
+                padding: 24px 32px;
+            }
+
+            .main-layout {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .progress-panel {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Is this even a good AI problem?</h1>
+            <p>A short diagnostic of AI fit.</p>
+            
+            <div class="intro-text">
+                <p>In today's rapidly evolving technological landscape, the allure of artificial intelligence can sometimes overshadow the critical question: is AI truly the right solution? Not every problem requires the complexity, cost, and resources that AI implementation demands. A systematic approach to evaluating AI suitability is essential to avoid costly missteps, wasted resources, and solutions that fail to deliver meaningful value. This assessment framework provides a structured methodology to determine whether your enterprise problem genuinely benefits from AI capabilities or if conventional approaches—such as rule-based systems, traditional automation, or process optimization—would be more appropriate, cost-effective, and maintainable. By carefully examining factors like problem complexity, data availability, business impact, and organizational readiness, you can make informed decisions that align technical solutions with actual business needs, ensuring that AI is deployed where it can deliver the greatest strategic advantage.</p>
+            </div>
+        </div>
+
+        <div class="main-layout">
+            <!-- Questions Section -->
+            <div>
+                <div class="input-grid">
+                    <div class="input-section">
+                        <label class="input-label" for="problemStatement">Problem Statement</label>
+                        <textarea id="problemStatement" class="input-field" rows="3" placeholder="Describe your enterprise problem or challenge..."></textarea>
+                    </div>
+                    
+                    <div class="input-section">
+                        <label class="input-label" for="domain">What kind of problem is this?</label>
+                        <select id="domain" class="input-field">
+                            <option value="">Select problem type...</option>
+                            <option value="workload-assessment">Workload Assessment & Discovery</option>
+                            <option value="migration-planning">Migration Planning & Execution</option>
+                            <option value="landing-zone">Landing Zone Setup & Configuration</option>
+                            <option value="policy-governance">Policy & Governance Configuration</option>
+                            <option value="identity-access">Identity & Access Setup</option>
+                            <option value="network-design">Network Design & Connectivity</option>
+                            <option value="observability">Observability & Telemetry Setup</option>
+                            <option value="monitoring-alerting">Monitoring & Alerting</option>
+                            <option value="backup-protection">Backup & Protection Policy Setup</option>
+                            <option value="disaster-recovery">Disaster Recovery Planning & Orchestration</option>
+                            <option value="resilience-testing">Resilience & Chaos Testing</option>
+                            <option value="incident-response">Incident Response & Recovery</option>
+                            <option value="cost-optimization">Cost & Usage Optimization</option>
+                            <option value="compliance-audit">Compliance & Audit Readiness</option>
+                            <option value="edge-provisioning">Edge Device Provisioning & Management</option>
+                            <option value="deployment-operations">Deployment & Release Operations</option>
+                            <option value="runbook-design">Runbook & Operational Playbook Design</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="accordion" id="questionnaire"></div>
+            </div>
+
+            <!-- Progress Panel -->
+            <div class="progress-panel">
+                <div class="circular-progress">
+                    <div class="progress-ring">
+                        <svg>
+                            <circle class="progress-ring-circle" cx="70" cy="70" r="60"></circle>
+                            <circle class="progress-ring-circle progress" cx="70" cy="70" r="60"
+                                    stroke-dasharray="377" stroke-dashoffset="377"></circle>
+                        </svg>
+                        <div class="progress-center">
+                            <div class="progress-percentage" id="progressPercentage">0/8</div>
+                            <div class="progress-label">Completed</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="readiness-section">
+                    <div class="readiness-title">Readiness Score</div>
+                    <div class="readiness-bar-wrapper">
+                        <div class="readiness-bar"></div>
+                        <div class="readiness-indicator" id="readinessIndicator"></div>
+                    </div>
+                    <div class="readiness-labels">
+                        <span>Not Suitable</span>
+                        <span>AI Ready</span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" id="showAnalysisBtn">Show Analysis</button>
+                    <button class="btn btn-secondary" id="resetBtn">Reset Answers</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div style="flex: 1;">
+                    <h2 class="modal-title" id="modalTitle">Assessment Results</h2>
+                    <p class="modal-subtitle" id="modalSubtitle"></p>
+                </div>
+                <button class="modal-close" onclick="closeModal()">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 5L15 15M15 5L5 15"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="result-text" id="resultText"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                id: 1,
+                title: "Problem Framing",
+                question: "Is the problem clear?",
+                description: "Evaluates whether the problem is clearly defined with understood root causes and user evidence.",
+                subCriteria: "Problem clarity • Root cause understanding • User evidence",
+                options: [
+                    { score: 1, text: "Problem unclear or vague" },
+                    { score: 3, text: "Symptoms clear, cause unclear" },
+                    { score: 4, text: "Mostly clear, minor gaps" },
+                    { score: 5, text: "Clear problem and root cause" },
+                    { score: 0, text: "Not sure" }
+                ],
+                analysis: {
+                    5: { decision: "Strong framing. The team can focus on solution shaping rather than problem diagnosis.", nextStep: "Move into solution exploration and ensure value, users, and flows are well-understood." },
+                    4: { decision: "Framing is good enough for early exploration, though some assumptions remain.", nextStep: "Align with PM and Research on remaining unknowns before committing to build." },
+                    3: { decision: "The pain is visible but underlying drivers are uncertain. AI fit may change as framing improves.", nextStep: "Clarify root causes with Research and PM before designing AI behavior or impact." },
+                    1: { decision: "Lack of clarity. Designing solutions at this point risks misalignment and rework.", nextStep: "Step back to articulate the real problem with PM and Research partners." },
+                    0: { decision: "Information gap early in the process, not a negative signal.", nextStep: "Briefly align with PM or Research to bring clarity." }
+                }
+            },
+            {
+                id: 2,
+                title: "User Value",
+                question: "Is there real user value?",
+                description: "Examines whether the solution addresses meaningful user needs with measurable benefits.",
+                subCriteria: "Task value • Benefit strength • Frequency • Adoption potential",
+                options: [
+                    { score: 1, text: "Low value or optional benefit" },
+                    { score: 3, text: "Some value, limited benefit" },
+                    { score: 4, text: "Useful for many, noticeable benefit" },
+                    { score: 5, text: "High-value task, strong benefit" },
+                    { score: 0, text: "Not sure" }
+                ],
+                analysis: {
+                    5: { decision: "Strong desirability and adoption potential. AI has a clear purpose for users.", nextStep: "Proceed to detail who benefits, how often, and in what workflow context." },
+                    4: { decision: "Solid value that may still require demonstration and feedback loops.", nextStep: "Coordinate with Research to validate frequency and workflow fit." },
+                    3: { decision: "Value exists but may not justify AI if simpler means work.", nextStep: "Explore if UI, automation, or instruction design achieves similar lift." },
+                    1: { decision: "Insufficient to justify AI investment, especially for complex areas like model integration.", nextStep: "Reassess task importance with PM and Research to understand priority." },
+                    0: { decision: "Ongoing discovery, especially when user needs are not yet surfaced.", nextStep: "Light user validation efforts often surface the necessary signal." }
+                }
+            },
+            {
+                id: 3,
+                title: "AI Advantage",
+                question: "Does AI actually help?",
+                description: "Determines whether AI provides clear advantages over simpler alternatives.",
+                subCriteria: "AI necessity • Advantage over rules/UI • Complexity justification",
+                options: [
+                    { score: 1, text: "AI adds no real benefit" },
+                    { score: 3, text: "Could go either way (AI or simple logic)" },
+                    { score: 4, text: "AI helps but not essential" },
+                    { score: 5, text: "AI adds clear advantage over rules/UI" },
+                    { score: 0, text: "Not sure" }
+                ],
+                analysis: {
+                    5: { decision: "Problem benefits from judgment, prediction, or generative behavior.", nextStep: "Define the exact behavior AI should perform and where human judgment remains." },
+                    4: { decision: "AI enhances experience but value may also be achieved through simpler means.", nextStep: "Clarify with PM whether improvement justifies investment and ongoing operations." },
+                    3: { decision: "Ambiguity about mechanism. Good moment to explore alternatives to AI.", nextStep: "Map candidate solutions (rules, filters, heuristics) to validate need." },
+                    1: { decision: "AI is not solving a complexity or judgment problem. Better solved with UX or logic.", nextStep: "Reframe as interaction or automation opportunity without AI." },
+                    0: { decision: "Early exploration. Need more clarity on what makes the problem hard.", nextStep: "Discuss what the non-AI solution would look like to expose if AI is justified." }
+                }
+            },
+            {
+                id: 4,
+                title: "Solution Shape",
+                question: "Is the solution direction clear?",
+                description: "Assesses whether the solution concept and interactions are well-defined.",
+                subCriteria: "Concept clarity • Interaction design • Workflow integration",
+                options: [
+                    { score: 1, text: "No clear solution shape" },
+                    { score: 3, text: "Rough idea, unclear interactions" },
+                    { score: 4, text: "Solid direction, needs refinement" },
+                    { score: 5, text: "Clear concept and interactions" },
+                    { score: 0, text: "Not sure" }
+                ],
+                analysis: {
+                    5: { decision: "Readiness for prototyping and validation.", nextStep: "Collaborate with Research to test form and timing of AI interaction." },
+                    4: { decision: "Forward momentum with remaining detail work.", nextStep: "Align with PM and Engineering to shape scope and constraints." },
+                    3: { decision: "The idea exists but user experience is undefined. AI still feels abstract.", nextStep: "Sketch core interaction loops to add specificity before committing to build." },
+                    1: { decision: "Design is not yet ready for AI evaluation.", nextStep: "Step back to scenario framing and workflows." },
+                    0: { decision: "Uncertainty at early ideation.", nextStep: "Use light ideation sessions with PM, Research, and Engineering to co-shape direction." }
+                }
+            },
+            {
+                id: 5,
+                title: "User Validation",
+                question: "Is there user signal?",
+                description: "Evaluates the degree of user validation through research and feedback.",
+                subCriteria: "Evidence strength • User feedback • Validation quality",
+                options: [
+                    { score: 1, text: "No validation or negative signal" },
+                    { score: 3, text: "Assumptions with light feedback" },
+                    { score: 4, text: "Positive signal from some users" },
+                    { score: 5, text: "Strong validation with evidence" },
+                    { score: 0, text: "Not sure" }
+                ],
+                analysis: {
+                    5: { decision: "Desirability and fit confirmed. Supports move to higher fidelity work.", nextStep: "Plan for scalability and rollout sequencing." },
+                    4: { decision: "Promise shown but more data points help derisk.", nextStep: "Conduct targeted validation with representative users." },
+                    3: { decision: "Conceptual interest but not verified need.", nextStep: "Add light-weight testing before solution commitment." },
+                    1: { decision: "Low desirability or mismatch.", nextStep: "Revisit workflows and task frequency with Research and PM." },
+                    0: { decision: "Validation hasn't happened yet.", nextStep: "Early user conversations often clarify whether AI offers lift." }
+                }
+            },
+            {
+                id: 6,
+                title: "Data Readiness",
+                question: "Is the data available?",
+                description: "Assesses data quality, availability, and suitability for AI applications.",
+                subCriteria: "Data availability • Data quality • Accessibility • Gaps",
+                options: [
+                    { score: 1, text: "No useful data available" },
+                    { score: 3, text: "Some data, gaps remain" },
+                    { score: 4, text: "Data exists, needs cleanup" },
+                    { score: 5, text: "Data exists and is usable for AI" },
+                    { score: 0, text: "Not sure" }
+                ],
+                analysis: {
+                    5: { decision: "Supports moving toward modeling or integration.", nextStep: "Align with PM and Engineering on access and operations." },
+                    4: { decision: "Usable with preprocessing efforts. Supports pilots.", nextStep: "Discuss cleanup cost and ownership with Engineering." },
+                    3: { decision: "Partial readiness. Gaps may limit model performance.", nextStep: "Define missing data and consider alternative signals." },
+                    1: { decision: "AI dependency is not viable at this stage.", nextStep: "Consider redesigning the solution to avoid AI or sequencing until data changes." },
+                    0: { decision: "Data situations are often opaque early on.", nextStep: "Brief sync with Engineering to clarify data sources and accessibility." }
+                }
+            },
+            {
+                id: 7,
+                title: "System Fit",
+                question: "Can this be built in the current system?",
+                description: "Evaluates integration feasibility with existing infrastructure and systems.",
+                subCriteria: "Integration feasibility • System compatibility • Technical path",
+                options: [
+                    { score: 1, text: "Not feasible with current systems" },
+                    { score: 3, text: "Feasible but unclear path" },
+                    { score: 4, text: "Feasible with some workarounds" },
+                    { score: 5, text: "Feasible with known path" },
+                    { score: 0, text: "Not sure" }
+                ],
+                analysis: {
+                    5: { decision: "Integrating this into the current system is realistic and can support a production pathway.", nextStep: "Align with PM and Engineering on scope, timelines, and expected impact." },
+                    4: { decision: "Workable solution that may use temporary patterns. Often suitable for pilots.", nextStep: "Discuss if workarounds are acceptable for the learning stage." },
+                    3: { decision: "Feasibility assumed but lacks clarity on system touchpoints and data flows.", nextStep: "Map dependencies and surface unknowns before committing to execution." },
+                    1: { decision: "Mismatch between solution concept and current technical readiness.", nextStep: "Determine if system modernization, sequencing, or scope reduction changes feasibility." },
+                    0: { decision: "Information gap, not a negative signal. Common early in AI exploration.", nextStep: "Sync with Engineering and PM leadership to clarify integration boundaries." }
+                }
+            },
+            {
+                id: 8,
+                title: "Risk & Adoption",
+                question: "Any major risks or blockers?",
+                description: "Evaluates risk levels, trust considerations, and organizational change readiness.",
+                subCriteria: "Risk level • Adoption likelihood • Trust • Change management",
+                options: [
+                    { score: 1, text: "High risk or strong pushback expected" },
+                    { score: 3, text: "Noticeable risks, adoption uncertain" },
+                    { score: 4, text: "Some risks, manageable" },
+                    { score: 5, text: "Low risk, adoption likely" },
+                    { score: 0, text: "Not sure" }
+                ],
+                analysis: {
+                    5: { decision: "Strong feasibility for rollout.", nextStep: "Integrate training and onboarding early." },
+                    4: { decision: "Risk exists but can be handled through communication, training, or UX affordances.", nextStep: "Co-plan adoption with PM and Design leadership." },
+                    3: { decision: "Friction in trust, explainability, or workflow change.", nextStep: "Prototype explainability, guidance, or safety affordances before build." },
+                    1: { decision: "Barriers in policy, compliance, or user trust.", nextStep: "Coordinate with PM, Legal, and Design leadership to assess viability or reframe scope." },
+                    0: { decision: "Lack of visibility into operational or compliance environments.", nextStep: "Brief discussions with PM or Legal often surface relevant policy constraints." }
+                }
+            }
+        ];
+
+        let answers = {};
+        let activeAccordion = null;
+
+        function initializeQuestionnaire() {
+            const container = document.getElementById('questionnaire');
+
+            questions.forEach((q, index) => {
+                const item = document.createElement('div');
+                item.className = 'accordion-item';
+
+                // Add risk warning for question 8 (index 7)
+                const riskWarningHTML = index === 7 ? `
+                    <div id="risk-warning" class="risk-warning" style="display: none;">
+                        <div class="risk-warning-text">
+                            <strong>Note:</strong> Consider strengthening your risk management framework with guidance on trust, ethics, and compliance.
+                        </div>
+                        <button class="copy-button" onclick="copyRiskGuidelines()" title="Copy guidelines to clipboard">
+                            <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
+                    </div>
+                ` : '';
+
+                item.innerHTML = `
+                    <div class="accordion-header" onclick="toggleAccordion(${index})">
+                        <div class="accordion-title-section">
+                            <div class="accordion-number">${String(index + 1).padStart(2, '0')}</div>
+                            <div class="accordion-title">${q.title}</div>
+                        </div>
+                        <div class="accordion-header-right">
+                            <div class="accordion-status">
+                                <span class="status-badge unanswered" id="badge-${index}">Unanswered</span>
+                                <div class="accordion-icon">
+                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M5 7.5L10 12.5L15 7.5"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="question-description">${q.description}</div>
+                            <div class="question-text">${q.question}</div>
+                            <div class="options">
+                                ${q.options.map((opt, optIndex) => `
+                                    <label class="option" onclick="selectOption(${index}, ${optIndex})">
+                                        <input type="radio" name="q${index}" value="${opt.score}">
+                                        <span class="option-label">${opt.text}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                            ${riskWarningHTML}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+
+            // Open first accordion by default
+            toggleAccordion(0);
+        }
+
+        function toggleAccordion(index) {
+            const items = document.querySelectorAll('.accordion-item');
+            const item = items[index];
+
+            if (activeAccordion !== null && activeAccordion !== index) {
+                items[activeAccordion].classList.remove('active');
+            }
+
+            item.classList.toggle('active');
+            activeAccordion = item.classList.contains('active') ? index : null;
+        }
+
+        function selectOption(questionIndex, optionIndex) {
+            const score = questions[questionIndex].options[optionIndex].score;
+            answers[questionIndex] = score;
+
+            // Update the visual selection
+            const options = document.querySelectorAll(`.accordion-item:nth-child(${questionIndex + 1}) .option`);
+            options.forEach((opt, idx) => {
+                if (idx === optionIndex) {
+                    opt.classList.add('selected');
+                } else {
+                    opt.classList.remove('selected');
+                }
+            });
+
+            // Update badge
+            const badge = document.getElementById(`badge-${questionIndex}`);
+            badge.textContent = 'Answered';
+            badge.classList.remove('unanswered');
+            badge.classList.add('answered');
+
+            // Check if this is question 8 (Risk & Adoption) and show/hide warning
+            if (questionIndex === 7) { // Question 8 is index 7
+                const warningDiv = document.getElementById('risk-warning');
+                if (score === 1 || score === 0) {
+                    warningDiv.style.display = 'flex';
+                } else {
+                    warningDiv.style.display = 'none';
+                }
+            }
+
+            // Update progress
+            updateProgress();
+
+            // Auto-open next unanswered question after a short delay
+            setTimeout(() => {
+                const nextIndex = questionIndex + 1;
+                if (nextIndex < questions.length) {
+                    // Close current accordion
+                    const items = document.querySelectorAll('.accordion-item');
+                    items[questionIndex].classList.remove('active');
+
+                    // Open next accordion
+                    items[nextIndex].classList.add('active');
+                    activeAccordion = nextIndex;
+                }
+            }, 300);
+        }
+
+        function updateProgress() {
+            const totalQuestions = questions.length;
+            const answeredQuestions = Object.keys(answers).length;
+            const totalScore = Object.values(answers).reduce((sum, score) => sum + score, 0);
+            const maxScore = totalQuestions * 4;
+            const percentage = (totalScore / maxScore) * 100;
+
+            // Update circular progress to show questions completed
+            const circle = document.querySelector('.progress-ring-circle.progress');
+            const radius = 60;
+            const circumference = radius * 2 * Math.PI;
+            const questionsPercentage = (answeredQuestions / totalQuestions) * 100;
+            const offset = circumference - (questionsPercentage / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+
+            // Update color based on completion
+            circle.style.stroke = '#1a1a1a';
+
+            document.getElementById('progressPercentage').textContent = `${answeredQuestions}/${totalQuestions}`;
+
+            // Update readiness indicator based on score
+            const indicator = document.getElementById('readinessIndicator');
+            indicator.style.left = `calc(${percentage}% - 2px)`;
+        }
+
+        function showAnalysis() {
+            const totalQuestions = questions.length;
+            const answeredQuestions = Object.keys(answers).length;
+
+            // Show analysis even with partial answers
+            if (answeredQuestions === 0) {
+                alert('Please answer at least one question to see the analysis.');
+                return;
+            }
+
+            const totalScore = Object.values(answers).reduce((sum, score) => sum + score, 0);
+            const maxPossibleScore = answeredQuestions * 4;
+            const percentage = (totalScore / maxPossibleScore) * 100;
+
+            // Update modal title and subtitle
+            document.getElementById('modalTitle').textContent = 'AI Readiness Scorecard';
+            document.getElementById('modalSubtitle').textContent = `Based on ${answeredQuestions}/${totalQuestions} questions answered`;
+
+            // Get problem statement and domain
+            const problemStatement = document.getElementById('problemStatement').value || 'Not provided';
+            const domainSelect = document.getElementById('domain');
+            const domainName = domainSelect.options[domainSelect.selectedIndex].text || 'Not selected';
+
+            // Build problem statement and domain section
+            const contextHTML = `
+                <div style="margin-bottom: 16px;">
+                    <div style="margin-bottom: 12px;">
+                        <strong style="font-size: 13px; color: #666666; text-transform: uppercase; letter-spacing: 0.5px;">Problem Statement:</strong>
+                        <p style="margin-top: 6px; font-size: 14px; color: #333333; line-height: 1.6;">${problemStatement}</p>
+                    </div>
+                    <div>
+                        <strong style="font-size: 13px; color: #666666; text-transform: uppercase; letter-spacing: 0.5px;">Problem Type:</strong>
+                        <p style="margin-top: 6px; margin-bottom: 0; font-size: 14px; color: #333333;">${domainName}</p>
+                    </div>
+                </div>
+            `;
+
+            // Build score display with inline label
+            const scoreHTML = `
+                <div style="display: flex; align-items: baseline; justify-content: center; gap: 12px; margin-top: 8px; margin-bottom: 8px;">
+                    <div style="font-family: 'Roboto', sans-serif; font-size: 48px; font-weight: 400; color: #1a1a1a; letter-spacing: 1px;">${Math.round(percentage)}%</div>
+                    <div style="font-size: 14px; color: #666666; text-transform: uppercase; letter-spacing: 0.5px;">AI Readiness</div>
+                </div>
+            `;
+
+            // Build horizontal progress bar with labels
+            const barHTML = `
+                <div class="result-readiness-bar" style="margin-bottom: 48px;">
+                    <div class="result-readiness-bar-inner">
+                        <div class="result-readiness-indicator" style="left: ${percentage}%"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 8px; padding: 0 32px;">
+                        <span style="font-size: 12px; color: #999999;">Not Suitable for AI</span>
+                        <span style="font-size: 12px; color: #999999;">AI Ready</span>
+                    </div>
+                </div>
+            `;
+
+            // Define descriptive sentences for each score level
+            const getQuestionAnalysis = (question, score) => {
+                if (question.analysis && question.analysis[score]) {
+                    const analysis = question.analysis[score];
+                    return `<strong>Decision:</strong> ${analysis.decision}<br><strong>Next step:</strong> ${analysis.nextStep}`;
+                }
+                return "Analysis not available for this question.";
+            };
+
+            // Build individual question analysis
+            let analysisItemsHTML = '<div class="analysis-items">';
+            Object.keys(answers).forEach(questionIndex => {
+                const question = questions[questionIndex];
+                const score = answers[questionIndex];
+                const description = getQuestionAnalysis(question, score);
+                
+                analysisItemsHTML += `
+                    <div class="analysis-item">
+                        <div class="analysis-label">${question.title}</div>
+                        <div class="analysis-value">${description}</div>
+                    </div>
+                `;
+            });
+            analysisItemsHTML += '</div>';
+
+            // Add copy button
+            const copyButtonHTML = `
+                <div style="margin-top: 32px; text-align: center;">
+                    <button class="btn btn-primary" onclick="copyAnalysisToClipboard()" style="width: auto; padding: 12px 32px;">
+                        <svg style="width: 18px; height: 18px; margin-right: 8px; vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        Copy Analysis to Clipboard
+                    </button>
+                </div>
+            `;
+
+            // Combine all HTML
+            const fullHTML = contextHTML + scoreHTML + barHTML + analysisItemsHTML + copyButtonHTML;
+
+            document.getElementById('resultText').innerHTML = fullHTML;
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        function copyAnalysisToClipboard() {
+            const totalQuestions = questions.length;
+            const answeredQuestions = Object.keys(answers).length;
+            const totalScore = Object.values(answers).reduce((sum, score) => sum + score, 0);
+            const maxPossibleScore = answeredQuestions * 4;
+            const percentage = (totalScore / maxPossibleScore) * 100;
+
+            const problemStatement = document.getElementById('problemStatement').value || 'Not provided';
+            const domainSelect = document.getElementById('domain');
+            const domainName = domainSelect.options[domainSelect.selectedIndex].text || 'Not selected';
+
+            let analysisText = `AI READINESS METRICS
+${'='.repeat(50)}
+
+PROBLEM STATEMENT:
+${problemStatement}
+
+PROBLEM TYPE: ${domainName}
+
+COMPLETION: ${answeredQuestions} / ${totalQuestions} questions answered
+
+AI READINESS SCORE: ${Math.round(percentage)}%
+
+ASSESSMENT RESULTS:
+${'-'.repeat(50)}
+
+`;
+
+            // Add individual question analysis
+            Object.keys(answers).forEach(questionIndex => {
+                const question = questions[questionIndex];
+                const score = answers[questionIndex];
+                
+                if (question.analysis && question.analysis[score]) {
+                    const analysis = question.analysis[score];
+                    analysisText += `${question.title.toUpperCase()}:\nDecision: ${analysis.decision}\nNext step: ${analysis.nextStep}\n\n`;
+                } else {
+                    analysisText += `${question.title.toUpperCase()}:\nAnalysis not available.\n\n`;
+                }
+            });
+
+            analysisText += `${'-'.repeat(50)}
+Generated: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`;
+
+            navigator.clipboard.writeText(analysisText).then(() => {
+                alert('Analysis copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy analysis. Please try again.');
+            });
+        }
+
+        function resetAssessment() {
+            if (Object.keys(answers).length === 0) {
+                return;
+            }
+
+            if (confirm('Are you sure you want to reset all answers?')) {
+                answers = {};
+                activeAccordion = null;
+
+                // Reset all badges
+                document.querySelectorAll('.status-badge').forEach((badge) => {
+                    badge.textContent = 'Unanswered';
+                    badge.classList.remove('answered');
+                    badge.classList.add('unanswered');
+                });
+
+                // Reset all radio buttons
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.checked = false;
+                });
+
+                // Reset all option selections
+                document.querySelectorAll('.option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+
+                // Close all accordions
+                document.querySelectorAll('.accordion-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                // Reset progress
+                updateProgress();
+
+                // Hide risk warning
+                const warningDiv = document.getElementById('risk-warning');
+                if (warningDiv) {
+                    warningDiv.style.display = 'none';
+                }
+
+                // Open first accordion
+                toggleAccordion(0);
+
+                // Close modal
+                closeModal();
+            }
+        }
+
+        function copyRiskGuidelines() {
+            const guidelines = `AI Risk Management Guidelines
+
+Based on your assessment, consider strengthening your approach in these areas:
+
+1. RISK ASSESSMENT
+   - Identify potential failure modes and their impact
+   - Assess model bias and fairness concerns
+   - Evaluate data privacy and security risks
+   - Consider regulatory compliance requirements (GDPR, CCPA, industry-specific regulations)
+
+2. TRUST & EXPLAINABILITY
+   - Implement model interpretability techniques
+   - Document decision-making processes
+   - Create transparency reports for stakeholders
+   - Establish human oversight mechanisms
+
+3. ETHICAL CONSIDERATIONS
+   - Conduct ethical impact assessments
+   - Address potential discrimination or bias
+   - Ensure informed consent for data usage
+   - Consider societal implications
+
+4. COMPLIANCE FRAMEWORK
+   - Map applicable regulations and standards
+   - Implement data governance policies
+   - Establish audit trails and documentation
+   - Create incident response procedures
+
+5. CHANGE MANAGEMENT
+   - Develop comprehensive training programs
+   - Create clear communication plans
+   - Establish support structures
+   - Plan for continuous monitoring and improvement
+
+NEXT STEPS:
+- Schedule a risk assessment workshop with stakeholders
+- Engage legal and compliance teams early
+- Document all requirements and mitigation strategies
+- Build risk management into your project timeline`;
+
+            navigator.clipboard.writeText(guidelines).then(() => {
+                alert('Risk management guidelines copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy guidelines. Please try again.');
+            });
+        }
+
+        // Event listeners
+        document.getElementById('showAnalysisBtn').addEventListener('click', showAnalysis);
+        document.getElementById('resetBtn').addEventListener('click', resetAssessment);
+        document.getElementById('modalOverlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeModal();
+        });
+
+        // Initialize on load
+        initializeQuestionnaire();
+    </script>
+</body>
+</html>
